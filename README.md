@@ -25,6 +25,8 @@ require_once 'EMTMadrid.php';
 
 $bus = new EMTMadrid();
 $bus->getEstimatesIncident('680'); // numero de la parada || bus stop number
+// esta es la unica funcion que a mi me sirve que es la que te dice
+// cuantos minutos queden para que lleguen las linea/s a la parada
 ```
 
 All functions returns Array objects.
