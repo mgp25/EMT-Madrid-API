@@ -31,5 +31,20 @@ All functions returns Array objects.
 
 More info. about the functions in the wiki.
 
+## NOTE
+
+`idClient` and `keyPass` are not required as i extracted them from the app. By default this will be used:
+
+```php
+  const IDCLIENT  = 'EMT.SERVICIOS.IPHONE.2.0';
+  const PASSKEY   = 'DC352ADB-F31D-41E5-9B95-CCE11B7921F4';
+```
+
+But you if you have already your data, you can set it too:
+
+```php
+$bus = new EMTMadrid($idClient, $keyPass);
+```
+
 ## License
 MIT
