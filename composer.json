@@ -1,0 +1,23 @@
+{
+	"name": "mgp25/emtmadrid",
+	"type": "library",
+	"description": "An easy-to-use PHP Class for EMT Madrid's API",
+	"keywords": ["EMT Madrid", "api", "bus"],
+	"homepage": "https://github.com/mgp25/EMT-Madrid-API",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "mgp25",
+			"email": "me@mgp25.com",
+		}
+	],
+	"require": {
+		"php": ">=5.3.0",
+		"ext-curl": "*"
+	},
+	"autoload": {
+		"classmap": [
+				"src/"
+		]
+	}
+}
