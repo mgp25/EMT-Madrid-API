@@ -1,4 +1,4 @@
-# ![img](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/EMT_Madrid_Logo.svg/41px-EMT_Madrid_Logo.svg.png) EMT Madrid API [![Latest Stable Version](https://poser.pugx.org/mgp25/emt-madrid-api/v/stable)](https://packagist.org/packages/mgp25/emt-madrid-api) ![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg) ![license](https://img.shields.io/badge/License-MIT-blue.svg)
+# ![img](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/EMT_Madrid_Logo.svg/41px-EMT_Madrid_Logo.svg.png) EMT Madrid API [![Latest Stable Version](https://poser.pugx.org/mgp25/emt-madrid-api/v/stable)](https://packagist.org/packages/mgp25/emtmadrid) ![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg) ![license](https://img.shields.io/badge/License-MIT-blue.svg)
 
 
 **Do you like this project? Support it by donating**
