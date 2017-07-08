@@ -1,7 +1,4 @@
-# ![img](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/EMT_Madrid_Logo.svg/41px-EMT_Madrid_Logo.svg.png) EMT Madrid API
-PHP wrapper for EMT Madrid
-
-![license](https://img.shields.io/badge/License-MIT-blue.svg)
+# ![img](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/EMT_Madrid_Logo.svg/41px-EMT_Madrid_Logo.svg.png) EMT Madrid API [![Latest Stable Version](https://poser.pugx.org/mgp25/emt-madrid-api/v/stable)](https://packagist.org/packages/mgp25/emt-madrid-api) ![compatible](https://img.shields.io/badge/PHP%207-Compatible-brightgreen.svg) ![license](https://img.shields.io/badge/License-MIT-blue.svg)
 
 
 **Do you like this project? Support it by donating**
@@ -14,19 +11,19 @@ PHP wrapper for EMT Madrid
 ### Using Composer
 
 ```sh
-composer require mgp25/instagram-php
+composer require mgp25/emt-madrid-api
 ```
 
 ```php
 require __DIR__.'/../vendor/autoload.php';
 
-$ig = new \InstagramAPI\Instagram();
+$ig = new \EMTMadrid\EMTMadrid();
 ```
 
 If you want to test new and possibly unstable code that is in the master branch, and which hasn't yet been released, then you can use master instead (at your own risk):
 
 ```sh
-composer require mgp25/instagram-php dev-master
+composer require mgp25/emt-madrid-api dev-master
 ```
 
 ### I don't have Composer
