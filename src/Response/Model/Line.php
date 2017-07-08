@@ -11,7 +11,7 @@ class Line extends AutoPropertyHandler
     public $headerA;
     public $headerB;
     /**
-     * @var DayType
+     * @var DayType[]
      */
     public $dayType;
 }

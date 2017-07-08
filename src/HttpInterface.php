@@ -2,6 +2,7 @@
 
 namespace EMTMadrid;
 
+use EMTMadrid\Exception;
 use GuzzleHttp\Client as GuzzleClient;
 
 class HttpInterface
@@ -33,7 +34,7 @@ class HttpInterface
 
         $headers =
         [
-            'User-Agent'        => 'EMT/5.3.5 CFNetwork/758.0.2 Darwin/15.0.0',
+            'User-Agent'        => Constants::USER_AGENT,
             'Content-Type'      => 'application/x-www-form-urlencoded',
             'Accept-Encoding'   => 'gzip, deflate',
             'Accept-Language'   => 'es-es',
@@ -51,9 +52,17 @@ class HttpInterface
         $body = $response->getBody()->getContents();
 
         if ($this->debug) {
-            echo 'Request: ' . $endpoint . "\n";
-            echo 'Response: '.$body."\n";
-            echo "\n\n";
+            Debug::printRequest('POST', $endpoint);
+            Debug::printUpload(Utils::formatBytes(strlen($data)));
+            Debug::printPostData($data);
+            $bytes = Utils::formatBytes($response->getHeader('Content-Length')[0]);
+            Debug::printHttpCode($response->getStatusCode(), $bytes);
+            Debug::printResponse($body, $this->truncatedDebug);
+        }
+
+        if ($body === '[false]') {
+            throw new Exception\EMTMadridException('Llamada no disponible en este momento.');
+            return;
         }
 
         $mapper = new \JsonMapper();

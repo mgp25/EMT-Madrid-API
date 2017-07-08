@@ -24,134 +24,280 @@ class EMTMadrid
         $this->http->setTruncatedDebug($truncatedDebug);
     }
 
-    // YYYYMMDD
+
+    /**
+     * Obtiene el calendario EMT de tipos de día aplicables a los horarios de
+     * las líneas para un rango solicitado inicio-fin.
+     *
+     * @param string    $selectDate        Fecha del día. Formato dd/mm/yyyy.
+     * @param string    $SelectDateEnd     Fecha del día. Formato dd/mm/yyyy.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetCalendarResponse
+     */
     public function getCalendar(
         $SelectDateBegin,
         $SelectDateEnd)
     {
-      $data = array(
-        'SelectDateBegin' => $SelectDateBegin,
-        'SelectDateEnd'   => $SelectDateEnd
-      );
-      $this->http->sendRequest($data, '/bus/GetCalendar.php');
+        $data =
+        [
+            'SelectDateBegin' => $SelectDateBegin,
+            'SelectDateEnd'   => $SelectDateEnd
+        ];
+        return $this->http->sendRequest($data, '/bus/GetCalendar.php', new Response\GetCalendarResponse());
     }
 
-    // ES | EN
+    /**
+     * Devuelve los datos de los distintos tipos de redes de líneas de EMT
+     * (regulares, universitarias, nocturnas, etc), junto con sus distintos desgloses.
+     *
+     * @param string    $cultureInfo   'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetGroupsResponse
+     */
     public function getGroups($cultureInfo = 'ES')
     {
-      $this->http->sendRequest(array($cultureInfo), '/bus/GetGroups.php');
+        $data =
+        [
+            'cultureInfo' => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/bus/GetGroups.php', new Response\GetGroupsResponse());
     }
 
-    // empty lines-> all
-    //dd/MM/yyyy,
+    /**
+     * Recupera la relación general de líneas con su descripción y subgrupo al que pertenencen.
+     *
+     * @param string             $selectDate     Fecha del día. Formato dd/mm/yyyy.
+     * @param string|string[]    $lines          Una o varias líneas de bus. null para todas las líneas.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetListLinesResponse
+     */
     public function getListLines(
         $selectDate,
         $lines = null)
     {
-      if (is_array($lines))
-        $lines = implode('|', $lines);
-      $data = array(
-        'SelectDate' => $selectDate,
-        'Lines'    => $lines
-      );
+        if (is_array($lines)) {
+            $lines = implode('|', $lines);
+        }
+        $data =
+        [
+            'SelectDate' => $selectDate,
+            'Lines'      => $lines
+        ];
 
-      $this->http->sendRequest($data, '/bus/GetListLines.php');
+        return $this->http->sendRequest($data, '/bus/GetListLines.php', new Response\GetListLinesResponse());
     }
 
-    public function getNodesLines()
+    /**
+     * Recupera todos los identificadores de parada, junto con su coordenada UTM,
+     * nombre y la relación de líneas/sentido que pasan por cada uno de ellos.
+     *
+     * @param string    $nodes  Código de la parada. null para todas las paradas.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetNodesLinesResponse
+     */
+    public function getNodesLines($nodes = null)
     {
-      $this->http->sendRequest(null, '/bus/GetNodesLines.php');
+        $data =
+        [
+            'nodes' => $nodes
+        ];
+        return $this->http->sendRequest($data, '/bus/GetNodesLines.php', new Response\GetNodesLinesResponse());
     }
 
-    //dd/MM/yyyy,
+    /**
+     * Se obtiene el itinerario de una línea o varías líneas, con los vértices
+     *  para construir las rectas del recorrido y las coordenadas UTM de los
+     *  ejes viales y los códigos de parada.
+     *
+     * @param string             $selectDate     Fecha del día. Formato dd/mm/yyyy.
+     * @param string|string[]    $lines          Una o varias líneas de bus.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetTimesLinesResponse
+     */
     public function getRouteLines(
         $selectDate,
         $lines = null)
     {
-      $data = array(
-        'SelectDate' => $selectDate,
-        'Lines'    => $lines
-      );
+        if (is_array($lines)) {
+            $lines = implode('|', $lines);
+        }
+        $data =
+        [
+            'SelectDate' => $selectDate,
+            'Lines'      => $lines
+        ];
 
-      $this->http->sendRequest($data, '/bus/GetRouteLines.php');
+        return $this->http->sendRequest($data, '/bus/GetRouteLines.php', new Response\GetTimesLinesResponse());
     }
 
-    //dd/MM/yyyy,
+    /**
+     * Recupera los horarios vigentes para todos los tipos de día de las líneas solicitadas.
+     *
+     * @param string             $selectDate     Fecha del día. Formato dd/mm/yyyy.
+     * @param string|string[]    $lines          Una o varias líneas de bus.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetTimesLinesResponse
+     */
     public function getTimesLines(
         $selectDate,
         $lines)
     {
-      if (is_array($lines))
-        $lines = implode('|', $lines);
-      $data = array(
-        'SelectDate' => $selectDate,
-        'Lines'    => $lines
-      );
+        if (is_array($lines)) {
+            $lines = implode('|', $lines);
+        }
+        $data =
+        [
+            'SelectDate' => $selectDate,
+            'Lines'      => $lines
+        ];
 
-      $this->http->sendRequest($data, '/bus/GetTimesLines.php');
+        return $this->http->sendRequest($data, '/bus/GetTimesLines.php', new Response\GetTimesLinesResponse());
     }
 
-    //dd/MM/yyyy,
+    /**
+     * Proporciona información de la línea solicitada con un detalle a nivel de viaje.
+     *
+     * @param string             $selectDate     Fecha del día actual. Formato dd/mm/yyyy.
+     * @param string|string[]    $lines          Una o varias líneas de bus.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetTimeTableLinesResponse
+     */
     public function getTimeTableLines(
         $selectDate,
         $lines)
     {
-      if (is_array($lines))
-        $lines = implode('|', $lines);
-      $data = array(
-        'SelectDate' => $selectDate,
-        'Lines'    => $lines
-      );
+        if (is_array($lines)) {
+            $lines = implode('|', $lines);
+        }
+        $data =
+        [
+            'SelectDate' => $selectDate,
+            'Lines'      => $lines
+        ];
 
-      $this->http->sendRequest($data, '/bus/GetTimeTableLines.php');
+        return $this->http->sendRequest($data, '/bus/GetTimeTableLines.php', new Response\GetTimeTableLinesResponse());
     }
 
+    /**
+     * Obtiene los datos de estimación de llegadas del autobús a una parada determinada.
+     *
+     * @param string    $stopId         Código de la parada.
+     * @param string    $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetArriveStopResponse
+     */
     public function getArriveStop(
         $idStop,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'cultureInfo' => $cultureInfo,
-        'idStop'    => $idStop
-      );
-      $this->http->sendRequest($data, '/geo/GetArriveStop.php');
+        $data =
+        [
+            'idStop'        => $idStop,
+            'cultureInfo'   => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetArriveStop.php', new Response\GetArriveStopResponse());
     }
 
+    /**
+     * Devuelve la relación de grupos de explotación.
+     *
+     * @param string    $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetGeoGroupsResponse
+     */
     public function getGeoGroups($cultureInfo = 'ES')
     {
-      $data = array(
-        'cultureInfo' => $cultureInfo,
-      );
-      $this->http->sendRequest($data, '/geo/GetGroups.php');
+        $data =
+        [
+            'cultureInfo' => $cultureInfo,
+        ];
+        return $this->http->sendRequest($data, '/geo/GetGroups.php', new Response\GetGeoGroupsResponse());
     }
 
+    /**
+     * Es el mismo método que GetInfoLine pero proporciona información avanzada
+     * acerca de las frecuencias publicadas y otros datos relevantes.
+     *
+     * @param string    $fecha          Fecha de referencia para los datos. Formato dd/mm/yyyy.
+     * @param string    $line           Número de la línea.
+     * @param string    $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetInfoLineResponse
+     */
     public function getInfoLine(
         $fecha,
         $line,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'cultureInfo' => $cultureInfo,
-        'line'      => $line,
-        'fecha'     => $fecha
-      );
-      $this->http->sendRequest($data, '/geo/GetInfoLine.php');
+        $data =
+        [
+            'line'      => $line,
+            'fecha'     => $fecha,
+            'cultureInfo' => $cultureInfo
+        ];
+      return $this->http->sendRequest($data, '/geo/GetInfoLine.php', new Response\GetInfoLineResponse());
     }
 
+    /**
+     * Es el mismo método que GetInfoLine() pero proporciona información avanzada
+     * acerca de las frecuencias publicadas y otros datos relevantes.
+     *
+     * @param string    $fecha          Fecha de referencia para los datos. Formato dd/mm/yyyy.
+     * @param string    $line           Número de la línea.
+     * @param string    $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetInfoLineExtendResponse
+     */
     public function getInfoLineExtended(
         $fecha,
         $line,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'cultureInfo' => $cultureInfo,
-        'line'      => $line,
-        'fecha'     => $fecha
-      );
-      $this->http->sendRequest($data, '/geo/GetInfoLineExtend.php');
+        $data =
+        [
+            'line'          => $line,
+            'fecha'         => $fecha,
+            'cultureInfo'   => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetInfoLineExtend.php', new Response\GetInfoLineExtendResponse());
     }
 
-    // call getPointsOfInterestTypes() to get tipos
+    /**
+     * Obtiene la lista de puntos de interés situados a partir de una coordenada
+     * y dentro de un radio definido, junto con sus atributos.
+     *
+     * @param string|float  $latitude       Latitud.
+     * @param string|float  $latitude       Longitud.
+     * @param string|int    $radius         Radio de acción en metros.
+     * @param string|int    $tipos          @see getPointsOfInterestTypes().
+     * @param string        $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetPointsOfInterestResponse
+     */
     public function getPointsOfInterest(
         $latitude,
         $longitude,
@@ -159,50 +305,90 @@ class EMTMadrid
         $tipos,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'latitude'    => $latitude,
-        'longitude'   => $longitude,
-        'Radius'    => $radius,
-        'tipos'     => $tipos,
-        'cultureInfo' => $cultureInfo
-      );
-      $this->http->sendRequest($data, '/geo/GetPointsOfInterest.php');
+        $data =
+        [
+            'latitude'      => $latitude,
+            'longitude'     => $longitude,
+            'Radius'        => $radius,
+            'tipos'         => $tipos,
+            'cultureInfo'   => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetPointsOfInterest.php', new Response\GetPointsOfInterestResponse());
     }
 
+    /**
+     * Obtiene la relación de los tipos de puntos de interés.
+     *
+     * @param string    $cultureInfo    'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetPointsOfInterestTypesResponse
+     */
     public function getPointsOfInterestTypes($cultureInfo = 'ES')
     {
-      $data = array(
-        'cultureInfo' => $cultureInfo
-      );
-      $this->http->sendRequest($data, '/geo/GetPointsOfInterestTypes.php');
+        $data =
+        [
+            'cultureInfo' => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetPointsOfInterestTypes.php', new Response\GetPointsOfInterestTypesResponse());
     }
 
+    /**
+     * Obtiene una lista de paradas EMT situadas desde una coordenada y dentro
+     * de un radio predefinido con todos sus atributos, además de las líneas
+     * EMT que pasan por cada parada de la lista.
+     *
+     * @param string        $stopId        Código de la parada.
+     * @param string|int    $radius        Radio de acción en metros.
+     * @param string        $cultureInfo   'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetStopsFromStopResponse
+     */
     public function getStopsFromStop(
         $idStop,
         $radius,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'idStop'    => $idStop,
-        'Radius'    => $radius,
-        'cultureInfo' => $cultureInfo
-      );
-      $this->http->sendRequest($data, '/geo/GetStopsFromStop.php');
+        $data =
+        [
+            'idStop'        => $idStop,
+            'Radius'        => $radius,
+            'cultureInfo'   => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetStopsFromStop.php', new Response\GetStopsFromStopResponse());
     }
 
+    /**
+     * Obtiene una lista de paradas EMT situadas desde una coordenada y dentro
+     * de un radio predefinido con todos sus atributos, además de las líneas
+     * EMT que pasan por cada parada de la lista.
+     *
+     * @param string|float  $latitude      Latitud.
+     * @param string|float  $latitude      Longitud.
+     * @param string|int    $radius        Radio de acción en metros.
+     * @param string        $cultureInfo   'ES' para respuesta en español y 'EN' para respuesta en inglés.
+     *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\GetStopsFromXYResponse
+     */
     public function getStopsFromXY(
         $latitude,
         $longitude,
         $radius,
         $cultureInfo = 'ES')
     {
-      $data = array(
-        'latitude'    => $latitude,
-        'longitude'   => $longitude,
-        'Radius'    => $radius,
-        'cultureInfo' => $cultureInfo
-      );
-      $this->http->sendRequest($data, '/geo/GetStopsFromXY.php');
+        $data =
+        [
+            'latitude'      => $latitude,
+            'longitude'     => $longitude,
+            'Radius'        => $radius,
+            'cultureInfo'   => $cultureInfo
+        ];
+        return $this->http->sendRequest($data, '/geo/GetStopsFromXY.php', new Response\GetStopsFromXYResponse());
     }
 
     /**
@@ -213,19 +399,22 @@ class EMTMadrid
      * @param int    $direction     Dirección o sentido de la marcha. 1: Ida. 2: Vuelta.
      * @param string $cultureInfo   'ES' para respuesta en español y 'EN' para respuesta en inglés.
      *
-     * @return \EMTMadrid\Response\EstimatesIncidentResponse
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
+     * @return \EMTMadrid\Response\StopsLineResponse
      */
     public function getStopsLine(
         $line,
         $direction = 1,
         $cultureInfo = 'ES')
     {
-        $data = [
+        $data =
+        [
             'line'          => $line,
             'direction'     => $direction,
             'cultureInfo'   => $cultureInfo
         ];
-        $this->http->sendRequest($data, '/geo/GetStopsLine.php', new Response\StopsLineResponse());
+        return $this->http->sendRequest($data, '/geo/GetStopsLine.php', new Response\StopsLineResponse());
     }
 
     /**
@@ -235,6 +424,8 @@ class EMTMadrid
      * @param string $line          Número de la línea.
      * @param string $cultureInfo   'ES' para respuesta en español y 'EN' para respuesta en inglés.
      *
+     * @throws \EMTMadrid\Exception\EMTMadridException
+     *
      * @return \EMTMadrid\Response\EstimatesIncidentResponse
      */
     public function getEstimatesIncident(
@@ -242,7 +433,8 @@ class EMTMadrid
         $line = null,
         $cultureInfo = 'ES')
     {
-        $data = [
+        $data =
+        [
             'idLine'                                    => $line,
             'idStop'                                    => $stopId,
             'Text'                                      => null,
