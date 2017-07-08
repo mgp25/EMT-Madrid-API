@@ -14,6 +14,7 @@ class Utils
                 $check = 'vuelta';
             }
         }
+
         return $mediaType;
     }
 
@@ -63,5 +64,4 @@ class Utils
 
         return $colored_string;
     }
-
 }

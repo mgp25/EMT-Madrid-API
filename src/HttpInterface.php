@@ -2,8 +2,7 @@
 
 namespace EMTMadrid;
 
-use EMTMadrid\Exception;
-use GuzzleHttp\Client as GuzzleClient;
+
 
 class HttpInterface
 {
@@ -20,16 +19,15 @@ class HttpInterface
         $this->truncatedDebug = $bool;
     }
 
-
     public function sendRequest(
         $data,
         $endpoint,
         $class)
     {
-        $url = Constants::BASE_URL . $endpoint;
+        $url = Constants::BASE_URL.$endpoint;
 
         $data['idClient'] = Constants::ID_CLIENT;
-        $data['passKey']  = Constants::PASS_KEY;
+        $data['passKey'] = Constants::PASS_KEY;
         $data = http_build_query($data);
 
         $headers =
@@ -38,13 +36,13 @@ class HttpInterface
             'Content-Type'      => 'application/x-www-form-urlencoded',
             'Accept-Encoding'   => 'gzip, deflate',
             'Accept-Language'   => 'es-es',
-            'Accept'            => '*/*'
+            'Accept'            => '*/*',
         ];
 
         $options =
         [
             'headers'   => $headers,
-            'body'      => $data
+            'body'      => $data,
         ];
 
         $client = new \GuzzleHttp\Client();
@@ -66,6 +64,7 @@ class HttpInterface
         }
 
         $mapper = new \JsonMapper();
+
         return $mapper->map(self::api_body_decode($body), $class);
     }
 
