@@ -17,7 +17,7 @@ composer require mgp25/emtmadrid
 ```php
 require __DIR__.'/../vendor/autoload.php';
 
-$ig = new \EMTMadrid\EMTMadrid();
+$bus = new \EMTMadrid\EMTMadrid();
 ```
 
 If you want to test new and possibly unstable code that is in the master branch, and which hasn't yet been released, then you can use master instead (at your own risk):
