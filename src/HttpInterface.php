@@ -2,8 +2,6 @@
 
 namespace EMTMadrid;
 
-
-
 class HttpInterface
 {
     protected $debug;
